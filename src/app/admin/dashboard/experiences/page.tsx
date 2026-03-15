@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { Experience } from '@/types';
 import { useI18n } from '@/context/I18nContext';
 import { Button } from '@/components/ui/Button';
@@ -20,19 +21,26 @@ export default function ExperiencesListPage() {
 
     async function fetchItems() {
         setLoading(true);
-        const { data } = await supabase
-            .from('experiences')
-            .select('*')
-            .order('order', { ascending: true });
-
-        if (data) setItems(data);
+        try {
+            const q = query(collection(db, 'experiences'), orderBy('order', 'asc'));
+            const querySnapshot = await getDocs(q);
+            const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Experience[];
+            setItems(data);
+        } catch (error) {
+            console.error('Error fetching experiences:', error);
+        }
         setLoading(false);
     }
 
     async function handleDelete(id: string) {
         if (!confirm('Delete this experience?')) return;
-        const { error } = await supabase.from('experiences').delete().eq('id', id);
-        if (!error) setItems(items.filter(i => i.id !== id));
+        try {
+            await deleteDoc(doc(db, 'experiences', id));
+            setItems(items.filter(i => i.id !== id));
+        } catch (error) {
+            console.error('Error deleting experience:', error);
+            alert('Failed to delete experience');
+        }
     }
 
     return (

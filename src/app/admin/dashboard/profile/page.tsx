@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Profile } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -29,10 +30,15 @@ export default function ProfilePage() {
     }, []);
 
     async function fetchProfile() {
-        const { data } = await supabase.from('profile').select('*').single();
-        if (data) {
-            setProfile(data);
-            setImagePreview(data.profile_image_url);
+        try {
+            const docRef = doc(db, 'profile', 'main');
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setProfile(docSnap.data() as Profile);
+                setImagePreview(docSnap.data().profile_image_url);
+            }
+        } catch (error) {
+            console.error('Error fetching profile:', error);
         }
         setFetching(false);
     }
@@ -69,11 +75,13 @@ export default function ProfilePage() {
                 profile_image_url = uploadRes.secure_url;
             }
 
-            const { error } = await supabase
-                .from('profile')
-                .upsert({ ...profile, profile_image_url });
+            const docRef = doc(db, 'profile', 'main');
+            await setDoc(docRef, {
+                ...profile,
+                profile_image_url,
+                updated_at: new Date().toISOString()
+            }, { merge: true });
 
-            if (error) throw error;
             alert('Profile updated successfully!');
         } catch (error) {
             console.error(error);

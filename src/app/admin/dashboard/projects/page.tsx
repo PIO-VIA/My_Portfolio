@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { Project } from '@/types';
 import { useI18n } from '@/context/I18nContext';
 import { Button } from '@/components/ui/Button';
@@ -21,25 +22,26 @@ export default function ProjectsListPage() {
 
     async function fetchProjects() {
         setLoading(true);
-        const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .order('order', { ascending: true });
-
-        if (data) setProjects(data);
+        try {
+            const q = query(collection(db, 'projects'), orderBy('order', 'asc'));
+            const querySnapshot = await getDocs(q);
+            const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Project[];
+            setProjects(data);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
         setLoading(false);
     }
 
     async function handleDelete(id: string) {
         if (!confirm('Are you sure you want to delete this project?')) return;
 
-        const { error } = await supabase
-            .from('projects')
-            .delete()
-            .eq('id', id);
-
-        if (!error) {
+        try {
+            await deleteDoc(doc(db, 'projects', id));
             setProjects(projects.filter(p => p.id !== id));
+        } catch (error) {
+            console.error('Error deleting project:', error);
+            alert('Failed to delete project');
         }
     }
 
@@ -50,7 +52,7 @@ export default function ProjectsListPage() {
                     <h1 className="text-3xl font-bold">Projects</h1>
                     <p className="text-gray-500">Manage your portfolio projects.</p>
                 </div>
-                <Link href="/admin/projects/new">
+                <Link href="/admin/dashboard/projects/new">
                     <Button className="flex items-center space-x-2">
                         <Plus size={18} />
                         <span>Add Project</span>
@@ -81,7 +83,7 @@ export default function ProjectsListPage() {
                                 </div>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Link href={`/admin/projects/${project.id}`}>
+                                <Link href={`/admin/dashboard/projects/${project.id}`}>
                                     <Button variant="outline" size="sm">
                                         <Pencil size={16} />
                                     </Button>

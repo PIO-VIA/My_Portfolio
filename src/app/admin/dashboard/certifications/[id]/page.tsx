@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { Certification } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -31,27 +32,47 @@ export default function CertificationFormPage() {
     }, [id]);
 
     async function fetchItem() {
-        const { data } = await supabase.from('certifications').select('*').eq('id', id).single();
-        if (data) setFormData(data);
+        try {
+            const docRef = doc(db, 'certifications', id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setFormData(docSnap.data() as Certification);
+            }
+        } catch (error) {
+            console.error('Error fetching certification:', error);
+        }
         setFetching(false);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: name === 'order' ? Number(value) : value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        if (isNew) {
-            await supabase.from('certifications').insert([formData]);
-        } else {
-            await supabase.from('certifications').update(formData).eq('id', id);
+        try {
+            const dataToSave = {
+                ...formData,
+                updated_at: new Date().toISOString(),
+            };
+            if (isNew) {
+                await addDoc(collection(db, 'certifications'), {
+                    ...dataToSave,
+                    created_at: new Date().toISOString(),
+                });
+            } else {
+                await updateDoc(doc(db, 'certifications', id), dataToSave);
+            }
+            router.push('/admin/dashboard/certifications');
+            router.refresh();
+        } catch (error) {
+            console.error('Error saving certification:', error);
+            alert('Failed to save certification');
+        } finally {
+            setLoading(false);
         }
-        router.push('/admin/dashboard/certifications');
-        router.refresh();
-        setLoading(false);
     };
 
     if (fetching) return <p>Loading...</p>;

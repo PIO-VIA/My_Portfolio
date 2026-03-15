@@ -1,7 +1,10 @@
 'use client';
 
-import { useActionState } from 'react';
-import { authenticate } from '@/lib/actions';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createSession } from '@/lib/actions';
 import { useI18n } from '@/context/I18nContext';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -10,7 +13,36 @@ import { Lock } from 'lucide-react';
 
 export default function LoginPage() {
     const { t } = useI18n();
-    const [state, action, isPending] = useActionState(authenticate, undefined);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            if (user) {
+                // Sync session with the server (cookie for middleware)
+                await createSession(email);
+                router.push('/admin/dashboard');
+                router.refresh();
+            }
+        } catch (err: any) {
+            console.error('Login error:', err);
+            setError(t.admin.login.error || 'Identifiants invalides');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#050505] p-4">
@@ -26,7 +58,7 @@ export default function LoginPage() {
                     <h1 className="text-2xl font-bold tracking-tight">{t.admin.login.title}</h1>
                 </div>
 
-                <form action={action} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <Input
                         label={t.admin.login.email}
                         name="email"
@@ -40,18 +72,19 @@ export default function LoginPage() {
                         type="password"
                         placeholder="••••••••"
                         required
-                        error={state?.error}
+                        error={error || undefined}
                     />
 
                     <Button
                         type="submit"
                         className="w-full"
-                        disabled={isPending}
+                        disabled={loading}
                     >
-                        {isPending ? '...' : t.admin.login.submit}
+                        {loading ? '...' : t.admin.login.submit}
                     </Button>
                 </form>
             </motion.div>
         </div>
     );
 }
+

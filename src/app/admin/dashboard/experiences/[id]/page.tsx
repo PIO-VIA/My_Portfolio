@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { Experience } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -36,27 +37,47 @@ export default function ExperienceFormPage() {
     }, [id]);
 
     async function fetchItem() {
-        const { data } = await supabase.from('experiences').select('*').eq('id', id).single();
-        if (data) setFormData(data);
+        try {
+            const docRef = doc(db, 'experiences', id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setFormData(docSnap.data() as Experience);
+            }
+        } catch (error) {
+            console.error('Error fetching experience:', error);
+        }
         setFetching(false);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: name === 'order' ? Number(value) : value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        if (isNew) {
-            await supabase.from('experiences').insert([formData]);
-        } else {
-            await supabase.from('experiences').update(formData).eq('id', id);
+        try {
+            const dataToSave = {
+                ...formData,
+                updated_at: new Date().toISOString(),
+            };
+            if (isNew) {
+                await addDoc(collection(db, 'experiences'), {
+                    ...dataToSave,
+                    created_at: new Date().toISOString(),
+                });
+            } else {
+                await updateDoc(doc(db, 'experiences', id), dataToSave);
+            }
+            router.push('/admin/dashboard/experiences');
+            router.refresh();
+        } catch (error) {
+            console.error('Error saving experience:', error);
+            alert('Failed to save experience');
+        } finally {
+            setLoading(false);
         }
-        router.push('/admin/dashboard/experiences');
-        router.refresh();
-        setLoading(false);
     };
 
     if (fetching) return <p>Loading...</p>;

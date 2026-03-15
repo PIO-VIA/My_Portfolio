@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 import Navbar from '@/components/client/Navbar';
 import Hero from '@/components/client/Hero';
 import ProjectsSection from '@/components/client/Projects';
@@ -9,18 +10,24 @@ import ContactSection from '@/components/client/Contact';
 export const revalidate = 3600; // revalidate every hour
 
 export default async function Home() {
-  // Fetch data from Supabase
+  // Fetch data from Firestore
   const [
-    { data: profile },
-    { data: projects },
-    { data: certifications },
-    { data: experiences }
+    profileSnap,
+    projectsSnap,
+    certificationsSnap,
+    experiencesSnap
   ] = await Promise.all([
-    supabase.from('profile').select('*').single(),
-    supabase.from('projects').select('*').order('order', { ascending: true }),
-    supabase.from('certifications').select('*').order('order', { ascending: true }),
-    supabase.from('experiences').select('*').order('order', { ascending: true })
+    getDoc(doc(db, 'profile', 'main')),
+    getDocs(query(collection(db, 'projects'), orderBy('order', 'asc'))),
+    getDocs(query(collection(db, 'certifications'), orderBy('order', 'asc'))),
+    getDocs(query(collection(db, 'experiences'), orderBy('order', 'asc')))
   ]);
+
+  const profile = profileSnap.exists() ? { id: profileSnap.id, ...profileSnap.data() } as any : null;
+  const projects = projectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+  const certifications = certificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+  const experiences = experiencesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+
 
   // Fallback for empty DB (e.g. initial setup)
   const defaultProfile = {

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { supabase } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { uploadImage } from '@/lib/cloudinary';
 import { Project } from '@/types';
 import { Button } from '@/components/ui/Button';
@@ -42,22 +43,24 @@ export default function ProjectFormPage() {
     }, [id]);
 
     async function fetchProject() {
-        const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .eq('id', id)
-            .single();
+        try {
+            const docRef = doc(db, 'projects', id);
+            const docSnap = await getDoc(docRef);
 
-        if (data) {
-            setFormData(data);
-            setImagePreview(data.image_url);
+            if (docSnap.exists()) {
+                const data = docSnap.data() as Project;
+                setFormData(data);
+                setImagePreview(data.image_url);
+            }
+        } catch (error) {
+            console.error('Error fetching project:', error);
         }
         setFetching(false);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: name === 'order' ? Number(value) : value }));
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,14 +94,16 @@ export default function ProjectFormPage() {
                 ...formData,
                 image_url,
                 image_public_id,
+                updated_at: new Date().toISOString(),
             };
 
             if (isNew) {
-                const { error } = await supabase.from('projects').insert([dataToSave]);
-                if (error) throw error;
+                await addDoc(collection(db, 'projects'), {
+                    ...dataToSave,
+                    created_at: new Date().toISOString(),
+                });
             } else {
-                const { error } = await supabase.from('projects').update(dataToSave).eq('id', id);
-                if (error) throw error;
+                await updateDoc(doc(db, 'projects', id), dataToSave);
             }
 
             router.push('/admin/dashboard/projects');
