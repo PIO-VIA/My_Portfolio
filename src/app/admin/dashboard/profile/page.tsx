@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/Card';
 import { Save, Upload } from 'lucide-react';
-import { uploadImage } from '@/lib/cloudinary';
+import { uploadFile } from '@/lib/actions';
 import Image from 'next/image';
 
 export default function ProfilePage() {
@@ -71,7 +71,9 @@ export default function ProfilePage() {
         try {
             let profile_image_url = profile.profile_image_url;
             if (imageFile) {
-                const uploadRes: any = await uploadImage(imageFile);
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                const uploadRes: any = await uploadFile(formData);
                 profile_image_url = uploadRes.secure_url;
             }
 

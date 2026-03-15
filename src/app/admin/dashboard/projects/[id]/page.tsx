@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
-import { uploadImage } from '@/lib/cloudinary';
+import { uploadFile } from '@/lib/actions';
 import { Project } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -85,7 +85,9 @@ export default function ProjectFormPage() {
             let image_public_id = formData.image_public_id;
 
             if (imageFile) {
-                const uploadRes: any = await uploadImage(imageFile);
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                const uploadRes: any = await uploadFile(formData);
                 image_url = uploadRes.secure_url;
                 image_public_id = uploadRes.public_id;
             }

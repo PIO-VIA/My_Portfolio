@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useI18n } from '@/context/I18nContext';
-import { logout } from '@/lib/auth';
+import { signOut } from '@/lib/actions';
 import {
     LayoutDashboard,
     Briefcase,
@@ -24,14 +24,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
     const navigation = [
         { name: t.admin.dashboard.title, href: '/admin/dashboard', icon: LayoutDashboard },
-        { name: t.nav.projects, href: '/admin/projects', icon: FolderKanban },
-        { name: 'Certifications', href: '/admin/certifications', icon: GraduationCap },
-        { name: 'Experiences', href: '/admin/experiences', icon: Briefcase },
-        { name: 'Profile', href: '/admin/profile', icon: User },
+        { name: t.nav.projects, href: '/admin/dashboard/projects', icon: FolderKanban },
+        { name: 'Certifications', href: '/admin/dashboard/certifications', icon: GraduationCap },
+        { name: 'Experiences', href: '/admin/dashboard/experiences', icon: Briefcase },
+        { name: 'Profile', href: '/admin/dashboard/profile', icon: User },
     ];
 
     const handleLogout = async () => {
-        await logout();
+        await signOut();
         router.push('/admin/login');
     };
 
