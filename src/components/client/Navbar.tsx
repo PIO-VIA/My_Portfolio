@@ -20,10 +20,11 @@ export default function Navbar() {
     }, []);
 
     const navLinks = [
-        { name: t.nav.home, href: '#home' },
-        { name: t.nav.projects, href: '#projects' },
-        { name: t.nav.about, href: '#about' },
-        { name: t.nav.contact, href: '#contact' },
+        { name: t.nav.home, href: '/' },
+        { name: t.nav.projects, href: '/projects' },
+        { name: t.nav.experiences, href: '/experiences' },
+        { name: t.nav.certifications, href: '/certifications' },
+        { name: t.nav.contact, href: '/#contact' },
     ];
 
     return (

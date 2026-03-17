@@ -3,7 +3,7 @@
 import { useI18n } from '@/context/I18nContext';
 import { Experience, Certification } from '@/types';
 import { motion } from 'framer-motion';
-import { GraduationCap, Briefcase } from 'lucide-react';
+import { GraduationCap, Briefcase, ExternalLink } from 'lucide-react';
 
 export default function ExperienceSection({
     experiences,
@@ -51,6 +51,14 @@ export default function ExperienceSection({
                             </motion.div>
                         ))}
                     </div>
+                    {experiences.length >= 3 && (
+                        <div className="pt-4 ml-4 pl-8">
+                            <a href="/experiences" className="text-brand-primary font-bold hover:underline flex items-center gap-2">
+                                {t.ui.view_all_experiences}
+                                <ExternalLink size={16} />
+                            </a>
+                        </div>
+                    )}
                 </div>
 
                 {/* Certifications */}
@@ -80,6 +88,14 @@ export default function ExperienceSection({
                                 </div>
                             </motion.div>
                         ))}
+                        {certifications.length >= 3 && (
+                            <div className="pt-4">
+                                <a href="/certifications" className="text-brand-primary font-bold hover:underline flex items-center gap-2">
+                                    {t.ui.view_all_certifications}
+                                    <ExternalLink size={16} />
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

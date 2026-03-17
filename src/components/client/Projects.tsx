@@ -73,6 +73,15 @@ export default function ProjectsSection({ projects }: { projects: Project[] }) {
                         </motion.div>
                     ))}
                 </div>
+                <div className="mt-16 text-center">
+                    <a
+                        href="/projects"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full font-bold hover:scale-105 transition-transform"
+                    >
+                        {t.ui.view_all_projects}
+                        <ExternalLink size={18} />
+                    </a>
+                </div>
             </div>
         </section>
     );

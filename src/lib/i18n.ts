@@ -5,9 +5,20 @@ export const translations = {
         nav: {
             home: 'Accueil',
             projects: 'Projets',
+            experiences: 'Expériences',
+            certifications: 'Certifications',
             about: 'À propos',
             contact: 'Contact',
             admin: 'Admin',
+        },
+        ui: {
+            view_all_projects: 'Voir tous les projets',
+            view_all_experiences: 'Voir toutes les expériences',
+            view_all_certifications: 'Voir toutes les certifications',
+            search_projects: 'Rechercher des projets...',
+            search_experiences: 'Rechercher des expériences...',
+            search_certifications: 'Rechercher des certifications...',
+            no_results: 'Aucun résultat trouvé.',
         },
         hero: {
             title: 'Développeur Fullstack Senior',
@@ -32,9 +43,20 @@ export const translations = {
         nav: {
             home: 'Home',
             projects: 'Projects',
+            experiences: 'Experiences',
+            certifications: 'Certifications',
             about: 'About',
             contact: 'Contact',
             admin: 'Admin',
+        },
+        ui: {
+            view_all_projects: 'View all projects',
+            view_all_experiences: 'View all experiences',
+            view_all_certifications: 'View all certifications',
+            search_projects: 'Search projects...',
+            search_experiences: 'Search experiences...',
+            search_certifications: 'Search certifications...',
+            no_results: 'No results found.',
         },
         hero: {
             title: 'Senior Fullstack Developer',

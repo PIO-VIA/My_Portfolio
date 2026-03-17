@@ -24,9 +24,9 @@ export default async function Home() {
   ]);
 
   const profile = profileSnap.exists() ? { id: profileSnap.id, ...profileSnap.data() } as any : null;
-  const projects = projectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
-  const certifications = certificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
-  const experiences = experiencesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+  const projects = projectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })).slice(0, 3) as any[];
+  const certifications = certificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })).slice(0, 3) as any[];
+  const experiences = experiencesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })).slice(0, 3) as any[];
 
 
   // Fallback for empty DB (e.g. initial setup)
