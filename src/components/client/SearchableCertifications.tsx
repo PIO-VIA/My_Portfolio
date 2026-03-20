@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Certification } from '@/types';
 import { GraduationCap, Search, X, Calendar, Award } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SearchableCertifications({ certifications }: { certifications: Certification[] }) {
     const { t, language } = useI18n();
@@ -57,35 +58,44 @@ export default function SearchableCertifications({ certifications }: { certifica
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <AnimatePresence mode="popLayout">
                         {filteredCertifications.map((cert, i) => (
                             <motion.div
                                 key={cert.id}
                                 layout
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.3 }}
+                                className="group relative bg-white dark:bg-gray-900 p-1 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-xl hover:shadow-2xl hover:border-brand-primary/50 transition-all duration-300"
                             >
-                                <div className="glass p-8 rounded-3xl flex items-start gap-6 group hover:border-brand-primary transition-all">
-                                    <div className="p-4 bg-brand-primary/10 text-brand-primary rounded-2xl group-hover:scale-110 transition-transform">
-                                        <Award size={32} />
+                                <div className="flex items-center gap-6 p-8">
+                                    <div className="relative w-24 h-24 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800">
+                                        <Image
+                                            src={cert.image_url || '/images/certifications.png'}
+                                            alt={cert.title_fr}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
                                     </div>
                                     <div className="space-y-3">
-                                        <h3 className="text-xl font-bold">
+                                        <h3 className="text-2xl font-bold group-hover:text-brand-primary transition-colors">
                                             {language === 'fr' ? cert.title_fr : cert.title_en}
                                         </h3>
                                         <div className="space-y-1">
-                                            <p className="text-gray-500 font-medium flex items-center gap-2">
-                                                <GraduationCap size={16} />
+                                            <p className="text-gray-600 dark:text-gray-400 font-medium flex items-center gap-2">
+                                                <GraduationCap size={18} className="text-brand-primary" />
                                                 {cert.issuer}
                                             </p>
-                                            <p className="text-sm text-gray-400 flex items-center gap-2">
-                                                <Calendar size={14} />
+                                            <p className="text-sm text-gray-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                                                <Calendar size={16} />
                                                 {cert.date}
                                             </p>
                                         </div>
+                                    </div>
+                                    <div className="absolute top-8 right-8 text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Award size={24} />
                                     </div>
                                 </div>
                             </motion.div>

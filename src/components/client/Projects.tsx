@@ -31,39 +31,39 @@ export default function ProjectsSection({ projects }: { projects: Project[] }) {
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
                         >
-                            <Card className="group overflow-hidden p-0 border-none bg-gray-50 dark:bg-gray-900 shadow-none">
+                            <Card className="group overflow-hidden p-0 border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl hover:shadow-2xl hover:border-brand-primary/50 transition-all duration-300">
                                 <div className="relative h-64 overflow-hidden">
                                     <Image
-                                        src={project.image_url || '/next.svg'}
+                                        src={project.image_url || '/images/placeholder.png'}
                                         alt={project.title_fr}
                                         fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-6">
                                         {project.repo_url && (
-                                            <a href={project.repo_url} target="_blank" className="p-3 bg-white/10 glass rounded-full hover:bg-white/20 text-white">
-                                                <Github size={20} />
+                                            <a href={project.repo_url} target="_blank" className="p-4 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 text-white transform hover:scale-110 transition-all">
+                                                <Github size={24} />
                                             </a>
                                         )}
                                         {project.live_url && (
-                                            <a href={project.live_url} target="_blank" className="p-3 bg-white/10 glass rounded-full hover:bg-white/20 text-white">
-                                                <ExternalLink size={20} />
+                                            <a href={project.live_url} target="_blank" className="p-4 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 text-white transform hover:scale-110 transition-all">
+                                                <ExternalLink size={24} />
                                             </a>
                                         )}
                                     </div>
                                 </div>
-                                <div className="p-6 space-y-4">
-                                    <div className="space-y-2">
-                                        <h3 className="text-xl font-bold">
+                                <div className="p-8 space-y-6">
+                                    <div className="space-y-3">
+                                        <h3 className="text-2xl font-bold group-hover:text-brand-primary transition-colors">
                                             {language === 'fr' ? project.title_fr : project.title_en}
                                         </h3>
-                                        <p className="text-gray-500 text-sm line-clamp-2">
+                                        <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
                                             {language === 'fr' ? project.description_fr : project.description_en}
                                         </p>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-2 pt-2">
                                         {project.tech_stack?.map(tech => (
-                                            <span key={tech} className="px-3 py-1 bg-white dark:bg-black rounded-full text-xs font-medium border border-gray-100 dark:border-gray-800">
+                                            <span key={tech} className="px-3 py-1 bg-gray-50 dark:bg-gray-800 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-gray-100 dark:border-gray-700">
                                                 {tech}
                                             </span>
                                         ))}

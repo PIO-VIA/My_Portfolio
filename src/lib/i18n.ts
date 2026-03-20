@@ -37,7 +37,14 @@ export const translations = {
                 title: 'Tableau de bord',
                 logout: 'Déconnexion',
             }
-        }
+        },
+        about: {
+            title: 'À propos de moi',
+            description: 'Découvrez mon parcours, mes compétences et comment me contacter.',
+            skills_title: 'Stack Technique',
+            contact_title: 'Me Contacter',
+            contact_subtitle: 'Vous avez un projet en tête ? Contactez-moi pour en discuter.',
+        },
     },
     en: {
         nav: {
@@ -75,7 +82,14 @@ export const translations = {
                 title: 'Dashboard',
                 logout: 'Logout',
             }
-        }
+        },
+        about: {
+            title: 'About Me',
+            description: 'Discover my journey, my skills, and how to contact me.',
+            skills_title: 'Tech Stack',
+            contact_title: 'Contact Me',
+            contact_subtitle: 'Have a project in mind? Reach out to discuss it.',
+        },
     }
 };
 

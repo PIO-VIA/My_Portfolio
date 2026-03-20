@@ -4,6 +4,7 @@ import { useI18n } from '@/context/I18nContext';
 import { Experience, Certification } from '@/types';
 import { motion } from 'framer-motion';
 import { GraduationCap, Briefcase, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ExperienceSection({
     experiences,
@@ -77,14 +78,26 @@ export default function ExperienceSection({
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="glass p-6 rounded-2xl flex items-center justify-between group hover:border-brand-primary transition-colors"
+                                className="group relative bg-white dark:bg-gray-900 p-1 rounded-[32px] border border-gray-100 dark:border-gray-800 shadow-xl hover:shadow-2xl hover:border-brand-primary/50 transition-all duration-300"
                             >
-                                <div className="space-y-1">
-                                    <h3 className="font-bold">
-                                        {language === 'fr' ? cert.title_fr : cert.title_en}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">{cert.issuer}</p>
-                                    <p className="text-xs text-gray-400 font-medium">{cert.date}</p>
+                                <div className="flex items-center gap-6 p-6">
+                                    <div className="relative w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800">
+                                        <Image
+                                            src={cert.image_url || '/images/placeholder.png'}
+                                            alt={cert.title_fr}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h3 className="font-bold text-xl group-hover:text-brand-primary transition-colors">
+                                            {language === 'fr' ? cert.title_fr : cert.title_en}
+                                        </h3>
+                                        <div className="flex flex-col gap-1">
+                                            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{cert.issuer}</p>
+                                            <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{cert.date}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}

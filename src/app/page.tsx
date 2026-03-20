@@ -4,8 +4,6 @@ import Navbar from '@/components/client/Navbar';
 import Hero from '@/components/client/Hero';
 import ProjectsSection from '@/components/client/Projects';
 import ExperienceSection from '@/components/client/Experience';
-import SkillsSection from '@/components/client/Skills';
-import ContactSection from '@/components/client/Contact';
 
 export const revalidate = 3600; // revalidate every hour
 
@@ -47,8 +45,6 @@ export default async function Home() {
         experiences={experiences || []}
         certifications={certifications || []}
       />
-      <SkillsSection />
-      <ContactSection profile={profile || defaultProfile} />
 
       <footer className="py-12 border-t border-gray-100 dark:border-gray-900 text-center text-gray-500 text-sm">
         <p>&copy; {new Date().getFullYear()} {profile?.name || 'Developer'}. All rights reserved.</p>
