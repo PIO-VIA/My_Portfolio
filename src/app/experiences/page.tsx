@@ -7,8 +7,13 @@ import { Experience } from '@/types';
 export const revalidate = 3600;
 
 export default async function ExperiencesPage() {
-    const experiencesSnap = await getDocs(query(collection(db, 'experiences'), orderBy('order', 'asc')));
-    const experiences = experiencesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Experience[];
+    let experiences: Experience[] = [];
+    try {
+        const experiencesSnap = await getDocs(query(collection(db, 'experiences'), orderBy('order', 'asc')));
+        experiences = experiencesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Experience[];
+    } catch (error) {
+        console.error("Firebase connection error:", error);
+    }
 
     return (
         <main className="relative">

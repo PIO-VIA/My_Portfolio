@@ -7,8 +7,13 @@ import { Project } from '@/types';
 export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-    const projectsSnap = await getDocs(query(collection(db, 'projects'), orderBy('order', 'asc')));
-    const projects = projectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Project[];
+    let projects: Project[] = [];
+    try {
+        const projectsSnap = await getDocs(query(collection(db, 'projects'), orderBy('order', 'asc')));
+        projects = projectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Project[];
+    } catch (error) {
+        console.error("Firebase connection error:", error);
+    }
 
     return (
         <main className="relative">

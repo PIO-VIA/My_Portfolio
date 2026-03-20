@@ -7,8 +7,13 @@ import { Profile } from '@/types';
 export const revalidate = 3600;
 
 export default async function AboutPage() {
-    const profileSnap = await getDoc(doc(db, 'profile', 'main'));
-    const profile = profileSnap.exists() ? { id: profileSnap.id, ...profileSnap.data() } as Profile : null;
+    let profile: Profile | null = null;
+    try {
+        const profileSnap = await getDoc(doc(db, 'profile', 'main'));
+        profile = profileSnap.exists() ? { id: profileSnap.id, ...profileSnap.data() } as Profile : null;
+    } catch (error) {
+        console.error("Firebase connection error:", error);
+    }
 
     const defaultProfile: Profile = {
         id: 'main',

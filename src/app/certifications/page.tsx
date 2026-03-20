@@ -7,8 +7,13 @@ import { Certification } from '@/types';
 export const revalidate = 3600;
 
 export default async function CertificationsPage() {
-    const certificationsSnap = await getDocs(query(collection(db, 'certifications'), orderBy('order', 'asc')));
-    const certifications = certificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Certification[];
+    let certifications: Certification[] = [];
+    try {
+        const certificationsSnap = await getDocs(query(collection(db, 'certifications'), orderBy('order', 'asc')));
+        certifications = certificationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Certification[];
+    } catch (error) {
+        console.error("Firebase connection error:", error);
+    }
 
     return (
         <main className="relative">
