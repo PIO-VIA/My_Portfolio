@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import SearchableCertifications from '@/components/client/SearchableCertifications';
-import Navbar from '@/components/client/Navbar';
+import Footer from '@/components/client/Footer';
 import { Certification } from '@/types';
 
 export const revalidate = 3600;
@@ -16,12 +16,9 @@ export default async function CertificationsPage() {
     }
 
     return (
-        <main className="relative">
-            <Navbar />
+        <>
             <SearchableCertifications certifications={certifications} />
-            <footer className="py-12 border-t border-gray-100 dark:border-gray-900 text-center text-gray-500 text-sm">
-                <p>&copy; {new Date().getFullYear()}. All rights reserved.</p>
-            </footer>
-        </main>
+            <Footer />
+        </>
     );
 }

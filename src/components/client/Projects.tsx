@@ -1,185 +1,56 @@
 'use client';
 
 import { useI18n } from '@/context/I18nContext';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Project } from '@/types';
-import { Github, ExternalLink, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useRef, MouseEvent } from 'react';
-
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
-const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 100, damping: 18 } },
-};
-
-function TiltCard({ project, isFeatured, language }: { project: Project; isFeatured: boolean; language: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [7, -7]), { stiffness: 200, damping: 20 });
-    const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-7, 7]), { stiffness: 200, damping: 20 });
-
-    const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        x.set((e.clientX - rect.left) / rect.width - 0.5);
-        y.set((e.clientY - rect.top) / rect.height - 0.5);
-    };
-    const handleMouseLeave = () => { x.set(0); y.set(0); };
-
-    const title = language === 'fr' ? project.title_fr : project.title_en;
-    const description = language === 'fr' ? project.description_fr : project.description_en;
-
-    return (
-        <motion.div
-            ref={ref}
-            style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: '1000px' }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="group relative h-full rounded-3xl overflow-hidden cursor-default"
-        >
-            {/* Card background with glass */}
-            <div className="absolute inset-0 glass rounded-3xl border border-white/8 group-hover:border-brand-primary/30 transition-colors duration-300" />
-
-            {/* Image */}
-            <div className={`relative overflow-hidden ${isFeatured ? 'h-72 md:h-80' : 'h-56'}`}>
-                <Image
-                    src={project.image_url || '/next.svg'}
-                    alt={title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {/* Gradient overlay always visible */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent" />
-
-                {/* Hover overlay with links */}
-                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-5">
-                    {project.repo_url && (
-                        <motion.a
-                            href={project.repo_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            initial={{ y: 16, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            className="p-4 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 text-white transition-all hover:scale-110"
-                            aria-label="GitHub repository"
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <Github size={22} />
-                        </motion.a>
-                    )}
-                    {project.live_url && (
-                        <motion.a
-                            href={project.live_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            initial={{ y: 16, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.05 }}
-                            className="p-4 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 text-white transition-all hover:scale-110"
-                            aria-label="Live project"
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <ExternalLink size={22} />
-                        </motion.a>
-                    )}
-                </div>
-            </div>
-
-            {/* Content */}
-            <div className="relative z-10 p-6 space-y-4">
-                <div className="space-y-2">
-                    <h3 className={`font-bold group-hover:text-brand-primary transition-colors duration-200 ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
-                        {title}
-                    </h3>
-                    <p className="text-white/50 text-sm leading-relaxed line-clamp-2">{description}</p>
-                </div>
-                <div className="flex flex-wrap gap-2 pt-1">
-                    {project.tech_stack?.map(tech => (
-                        <span
-                            key={tech}
-                            className="tech-pill px-3 py-1 glass rounded-full text-[10px] font-bold uppercase tracking-wider text-white/60 border border-white/10 transition-all duration-200 hover:text-brand-primary cursor-default"
-                        >
-                            {tech}
-                        </span>
-                    ))}
-                </div>
-            </div>
-        </motion.div>
-    );
-}
+import SectionWrapper from './SectionWrapper';
+import ProjectCard from './ProjectCard';
 
 export default function ProjectsSection({ projects }: { projects: Project[] }) {
     const { t, language } = useI18n();
 
     return (
-        <section id="projects" className="py-28 relative">
+        <SectionWrapper id="projects" className="bg-[#05a05] relative">
             <div className="container mx-auto px-6">
                 {/* Section header */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-80px' }}
-                    className="mb-16 space-y-4"
-                >
-                    <motion.p variants={itemVariants} className="text-brand-primary font-bold tracking-widest uppercase text-sm">
-                        — {t.nav.projects}
-                    </motion.p>
-                    <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold tracking-tight">
-                        Featured <span className="shimmer-text">Work</span>
-                    </motion.h2>
-                    <motion.p variants={itemVariants} className="text-white/50 max-w-xl text-lg">
+                <div className="mb-20 space-y-6 text-center lg:text-left">
+                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-xs font-black uppercase tracking-[0.2em]">
+                        {t.nav.projects}
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                        Crafting Digital <br />
+                        <span className="shimmer-text">Masterpieces</span>
+                    </h2>
+                    <p className="text-white/40 max-w-2xl text-lg leading-relaxed mx-auto lg:mx-0 font-medium">
                         {t.projects.subtitle}
-                    </motion.p>
-                </motion.div>
+                    </p>
+                </div>
 
-                {/* Bento Grid */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-60px' }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
-                    {projects.map((project, i) => (
-                        <motion.div
-                            key={project.id}
-                            variants={itemVariants}
-                            className={`${i === 0 ? 'lg:col-span-2' : ''} h-full`}
-                        >
-                            <TiltCard project={project} isFeatured={i === 0} language={language} />
-                        </motion.div>
+                {/* Bento-styleish Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                    {projects.slice(0, 3).map((project, i) => (
+                        <div key={project.id} className={i === 0 ? 'lg:col-span-2' : ''}>
+                            <ProjectCard project={project} language={language} index={i} />
+                        </div>
                     ))}
-                </motion.div>
+                </div>
 
                 {/* View all CTA */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
-                    className="mt-14 text-center"
-                >
+                <div className="flex justify-center">
                     <Link
                         href="/projects"
-                        className="group inline-flex items-center gap-3 px-8 py-4 glass rounded-full border border-white/10 font-bold text-white hover:border-brand-primary/50 hover:text-brand-primary transition-all duration-300"
+                        className="group inline-flex items-center gap-4 px-12 py-5 glass rounded-[2rem] border border-white/5 font-black text-white hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl"
                     >
                         {t.ui.view_all_projects}
-                        <motion.span
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                            <ArrowRight size={18} />
-                        </motion.span>
+                        <ArrowRight size={20} className="transition-transform group-hover:translate-x-2" />
                     </Link>
-                </motion.div>
+                </div>
             </div>
-        </section>
+
+            {/* Background Accent */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-brand-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none" />
+        </SectionWrapper>
     );
 }

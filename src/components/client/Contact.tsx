@@ -2,19 +2,11 @@
 
 import { useI18n } from '@/context/I18nContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, MapPin, Send, Check, Loader } from 'lucide-react';
+import { Mail, MapPin, Send, Check, Loader2, User, Type, MessageSquare } from 'lucide-react';
 import { Profile } from '@/types';
 import { useState, FormEvent } from 'react';
 
 type FormStatus = 'idle' | 'sending' | 'sent';
-
-const fieldVariants = {
-    hidden: { opacity: 0, y: 18 },
-    visible: (i: number) => ({
-        opacity: 1, y: 0,
-        transition: { type: 'spring' as const, stiffness: 120, damping: 18, delay: i * 0.1 }
-    }),
-};
 
 export default function ContactSection({ profile }: { profile: Profile }) {
     const { t } = useI18n();
@@ -23,145 +15,132 @@ export default function ContactSection({ profile }: { profile: Profile }) {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setStatus('sending');
-        // Simulate send delay (replace with real email API if needed)
-        await new Promise(r => setTimeout(r, 1800));
+        await new Promise(r => setTimeout(r, 2000));
         setStatus('sent');
-        setTimeout(() => setStatus('idle'), 3500);
+        setTimeout(() => setStatus('idle'), 3000);
     };
 
-    const contactItems = [
-        profile.social_links?.email && {
-            icon: Mail,
-            label: 'Email',
-            value: profile.social_links.email,
-            href: `mailto:${profile.social_links.email}`,
-        },
-        {
-            icon: MapPin,
-            label: t.contact.location,
-            value: t.contact.location_value,
-            href: null,
-        },
-    ].filter(Boolean) as { icon: typeof Mail; label: string; value: string; href: string | null }[];
-
     return (
-        <div className="grid md:grid-cols-2 gap-14 items-start">
-            {/* Left — Contact info */}
-            <div className="space-y-8">
-                <p className="text-white/50 leading-relaxed">{t.about.contact_subtitle}</p>
-                <div className="space-y-5">
-                    {contactItems.map(({ icon: Icon, label, value, href }, i) => (
-                        <motion.div
-                            key={label}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ type: 'spring', stiffness: 100, delay: i * 0.1 }}
-                            className="flex items-center gap-4"
-                        >
-                            <div className="p-3 glass rounded-2xl border border-white/8 text-brand-primary flex-shrink-0">
-                                <Icon size={22} />
-                            </div>
-                            <div>
-                                <p className="text-xs text-white/30 font-bold uppercase tracking-widest">{label}</p>
-                                {href ? (
-                                    <a href={href} className="font-bold hover:text-brand-primary transition-colors">{value}</a>
-                                ) : (
-                                    <p className="font-bold">{value}</p>
-                                )}
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Right — Form */}
+        <div className="space-y-12">
             <motion.form
                 onSubmit={handleSubmit}
-                initial="hidden"
-                whileInView="visible"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-                className="glass rounded-3xl border border-white/8 p-8 space-y-5"
+                className="glass rounded-[2.5rem] border border-white/5 p-10 space-y-8 bg-white/2"
             >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {[
-                        { label: t.contact.name_label, placeholder: t.contact.name_placeholder, type: 'text', autoComplete: 'name' },
-                        { label: t.contact.email_label, placeholder: t.contact.email_placeholder, type: 'email', autoComplete: 'email' },
-                    ].map((field, i) => (
-                        <motion.div key={field.label} custom={i} variants={fieldVariants} className="space-y-1.5">
-                            <label className="text-xs font-bold text-white/40 uppercase tracking-widest">{field.label}</label>
-                            <input
-                                type={field.type}
-                                placeholder={field.placeholder}
-                                autoComplete={field.autoComplete}
-                                required
-                                disabled={status !== 'idle'}
-                                className="w-full px-4 py-3 glass rounded-xl border border-white/8 focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all text-white placeholder-white/20 text-sm disabled:opacity-50"
-                            />
-                        </motion.div>
-                    ))}
+                <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
+                            <User size={12} />
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="John Doe"
+                            required
+                            disabled={status !== 'idle'}
+                            className="w-full px-6 py-4 glass rounded-2xl border border-white/5 focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all text-white placeholder-white/10 font-medium disabled:opacity-50 bg-white/5"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
+                            <Mail size={12} />
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            placeholder="john@example.com"
+                            required
+                            disabled={status !== 'idle'}
+                            className="w-full px-6 py-4 glass rounded-2xl border border-white/5 focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all text-white placeholder-white/10 font-medium disabled:opacity-50 bg-white/5"
+                        />
+                    </div>
                 </div>
 
-                <motion.div custom={2} variants={fieldVariants} className="space-y-1.5">
-                    <label className="text-xs font-bold text-white/40 uppercase tracking-widest">{t.contact.subject_label}</label>
+                <div className="space-y-3">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
+                        <Type size={12} />
+                        Subject
+                    </label>
                     <input
                         type="text"
-                        placeholder={t.contact.subject_placeholder}
+                        placeholder="Inquiry about new project"
                         required
                         disabled={status !== 'idle'}
-                        className="w-full px-4 py-3 glass rounded-xl border border-white/8 focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all text-white placeholder-white/20 text-sm disabled:opacity-50"
+                        className="w-full px-6 py-4 glass rounded-2xl border border-white/5 focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all text-white placeholder-white/10 font-medium disabled:opacity-50 bg-white/5"
                     />
-                </motion.div>
+                </div>
 
-                <motion.div custom={3} variants={fieldVariants} className="space-y-1.5">
-                    <label className="text-xs font-bold text-white/40 uppercase tracking-widest">{t.contact.message_label}</label>
+                <div className="space-y-3">
+                    <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
+                        <MessageSquare size={12} />
+                        Message
+                    </label>
                     <textarea
-                        placeholder={t.contact.message_placeholder}
+                        placeholder="Tell me more about your project..."
                         required
-                        rows={5}
+                        rows={6}
                         disabled={status !== 'idle'}
-                        className="w-full px-4 py-3 glass rounded-xl border border-white/8 focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all text-white placeholder-white/20 text-sm resize-none disabled:opacity-50"
+                        className="w-full px-6 py-4 glass rounded-[2rem] border border-white/5 focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all text-white placeholder-white/10 font-medium resize-none disabled:opacity-50 bg-white/5"
                     />
-                </motion.div>
+                </div>
 
-                <motion.div custom={4} variants={fieldVariants}>
-                    <motion.button
-                        type="submit"
-                        disabled={status !== 'idle'}
-                        whileHover={status === 'idle' ? { scale: 1.02 } : {}}
-                        whileTap={status === 'idle' ? { scale: 0.98 } : {}}
-                        className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 ${status === 'sent'
-                            ? 'bg-green-500'
-                            : 'bg-gradient-to-r from-brand-primary to-brand-secondary'
-                            } disabled:cursor-not-allowed`}
-                        style={{ boxShadow: status === 'idle' ? '0 0 24px rgba(14,165,233,0.3)' : undefined }}
-                    >
-                        <AnimatePresence mode="wait">
-                            {status === 'idle' && (
-                                <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                    className="flex items-center gap-2">
-                                    {t.contact.send} <Send size={18} />
-                                </motion.span>
-                            )}
-                            {status === 'sending' && (
-                                <motion.span key="sending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                    className="flex items-center gap-2">
-                                    <div className="spinner" />
-                                    {t.contact.sending}
-                                </motion.span>
-                            )}
-                            {status === 'sent' && (
-                                <motion.span key="sent" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                                    className="flex items-center gap-2">
-                                    <Check size={20} />
-                                    {t.contact.sent}
-                                </motion.span>
-                            )}
-                        </AnimatePresence>
-                    </motion.button>
-                </motion.div>
+                <motion.button
+                    type="submit"
+                    disabled={status !== 'idle'}
+                    whileHover={status === 'idle' ? { scale: 1.01 } : {}}
+                    whileTap={status === 'idle' ? { scale: 0.99 } : {}}
+                    className={`w-full group relative flex items-center justify-center gap-3 px-8 py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xs transition-all duration-500 ${status === 'sent'
+                        ? 'bg-green-500'
+                        : 'bg-white text-black hover:bg-brand-primary hover:text-white'
+                        } disabled:cursor-not-allowed overflow-hidden`}
+                >
+                    <AnimatePresence mode="wait">
+                        {status === 'idle' && (
+                            <motion.span key="idle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                                className="flex items-center gap-3">
+                                Send Message <Send size={16} />
+                            </motion.span>
+                        )}
+                        {status === 'sending' && (
+                            <motion.span key="sending" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                                className="flex items-center gap-3">
+                                <Loader2 size={18} className="animate-spin" />
+                                Transmitting...
+                            </motion.span>
+                        )}
+                        {status === 'sent' && (
+                            <motion.span key="sent" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+                                className="flex items-center gap-3 text-white">
+                                <Check size={20} />
+                                Successfully Sent
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                </motion.button>
             </motion.form>
+
+            <div className="grid grid-cols-2 gap-6">
+                <a href={profile.social_links?.email ? `mailto:${profile.social_links.email}` : '#'} className="p-6 glass rounded-3xl border border-white/5 flex items-center justify-center gap-4 hover:border-brand-primary/30 transition-all duration-500 group">
+                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary transition-transform group-hover:scale-110">
+                        <Mail size={20} />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Email</p>
+                        <p className="text-sm font-black text-white">{profile.social_links?.email}</p>
+                    </div>
+                </a>
+                <div className="p-6 glass rounded-3xl border border-white/5 flex items-center justify-center gap-4 group">
+                    <div className="w-10 h-10 rounded-xl bg-brand-secondary/10 flex items-center justify-center text-brand-secondary transition-transform group-hover:scale-110">
+                        <MapPin size={20} />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Based In</p>
+                        <p className="text-sm font-black text-white">Paris, France</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

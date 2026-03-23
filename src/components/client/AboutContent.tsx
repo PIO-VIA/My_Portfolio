@@ -6,156 +6,139 @@ import { Profile } from '@/types';
 import SkillsSection from './Skills';
 import ContactSection from './Contact';
 import Image from 'next/image';
-import { MapPin, Code2 } from 'lucide-react';
-
-const wordVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: (i: number) => ({
-        opacity: 1, y: 0,
-        transition: { type: 'spring' as const, stiffness: 100, damping: 18, delay: i * 0.06 }
-    }),
-};
+import { MapPin, Code2, Rocket, ShieldCheck, Zap } from 'lucide-react';
+import SectionWrapper from './SectionWrapper';
 
 export default function AboutContent({ profile }: { profile: Profile }) {
     const { t, language } = useI18n();
     const bio = language === 'fr' ? profile.bio_fr : profile.bio_en;
 
     return (
-        <div className="pt-36 pb-24" style={{ background: '#050505', color: '#ededed' }}>
+        <div className="space-y-32 pb-32">
             {/* ── Section 1: Identity ── */}
-            <section className="container mx-auto px-6 mb-28">
-                <div className="grid md:grid-cols-2 gap-16 items-center max-w-5xl mx-auto">
-                    {/* Photo with animated gradient border */}
+            <SectionWrapper id="identity" className="pt-40!">
+                <div className="grid lg:grid-cols-2 gap-20 items-center max-w-7xl mx-auto">
+                    {/* Photo Container */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.88 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 80, damping: 16, delay: 0.1 }}
-                        className="relative mx-auto"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+                        className="relative"
                     >
-                        {/* Outer animated gradient ring */}
-                        <div className="gradient-border rounded-[36px]">
-                            <div className="relative aspect-square w-72 md:w-80 rounded-[34px] overflow-hidden bg-[#111]">
-                                <Image
-                                    src={profile.profile_image_url || '/next.svg'}
-                                    alt={profile.name}
-                                    fill
-                                    className="object-cover"
-                                    priority
-                                />
-                            </div>
+                        <div className="relative aspect-[4/5] w-full max-w-md mx-auto rounded-[3rem] overflow-hidden group">
+                            {/* Main Image */}
+                            <Image
+                                src={profile.profile_image_url || '/next.svg'}
+                                alt={profile.name}
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                priority
+                            />
+
+                            {/* Gradient Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60" />
+
+                            {/* Floating Badges */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                                className="absolute bottom-10 left-10 right-10 glass p-6 rounded-3xl border border-white/10 space-y-2 backdrop-blur-xl"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center text-brand-primary border border-brand-primary/20">
+                                        <ShieldCheck size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Status</p>
+                                        <p className="text-sm font-black text-white">Verified Expert</p>
+                                    </div>
+                                </div>
+                            </motion.div>
                         </div>
 
-                        {/* Badge floating bottom-right */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.7 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-                            className="absolute -bottom-5 -right-5 glass px-4 py-3 rounded-2xl border border-white/10 flex items-center gap-2 shadow-xl"
-                        >
-                            <div className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-                            </div>
-                            <span className="text-sm font-bold text-white/80">Open to work</span>
-                        </motion.div>
+                        {/* Decorative Background Glow */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-primary/10 blur-[120px] -z-10 rounded-full" />
                     </motion.div>
 
                     {/* Text content */}
-                    <div className="space-y-6">
-                        <motion.p
-                            initial={{ opacity: 0, y: -8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-brand-primary font-bold tracking-widest uppercase text-sm"
-                        >
-                            — {t.about.title}
-                        </motion.p>
-
-                        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
-                            {profile.name.split(' ').map((word, i) => (
-                                <motion.span
-                                    key={i}
-                                    custom={i}
-                                    variants={wordVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    className="inline-block mr-3"
-                                >
-                                    {i === profile.name.split(' ').length - 1
-                                        ? <span className="shimmer-text">{word}</span>
-                                        : word}
-                                </motion.span>
-                            ))}
-                        </h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4, duration: 0.6 }}
-                            className="text-white/55 text-lg leading-relaxed"
-                        >
-                            {bio}
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.55 }}
-                            className="flex flex-wrap gap-3 pt-2"
-                        >
-                            <div className="flex items-center gap-2 px-4 py-2 glass rounded-full border border-white/8 text-sm text-white/50">
-                                <MapPin size={14} className="text-brand-primary" />
-                                Paris, France
+                    <div className="space-y-10">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-xs font-black uppercase tracking-[0.2em]">
+                                {t.about.title}
                             </div>
-                            <div className="flex items-center gap-2 px-4 py-2 glass rounded-full border border-white/8 text-sm text-white/50">
-                                <Code2 size={14} className="text-brand-secondary" />
-                                Fullstack Developer
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-tight text-white">
+                                Engineering <br />
+                                <span className="shimmer-text">Human-Centric</span> Solutions
+                            </h1>
+                            <p className="text-white/40 text-xl leading-relaxed font-medium max-w-xl">
+                                {bio}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6 pt-4">
+                            <div className="p-6 glass rounded-3xl border border-white/5 space-y-3 hover:border-brand-primary/20 transition-all duration-500">
+                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-brand-primary border border-white/5">
+                                    <MapPin size={20} />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Location</p>
+                                    <p className="text-sm font-black text-white">Paris, France</p>
+                                </div>
                             </div>
-                        </motion.div>
+                            <div className="p-6 glass rounded-3xl border border-white/5 space-y-3 hover:border-brand-secondary/20 transition-all duration-500">
+                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-brand-secondary border border-white/5">
+                                    <Zap size={20} />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Speed</p>
+                                    <p className="text-sm font-black text-white">Fast Delivery</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            {/* ── Divider ── */}
-            <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-28" />
+            </SectionWrapper>
 
             {/* ── Section 2: Skills ── */}
-            <section className="container mx-auto px-6 mb-28">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ type: 'spring', stiffness: 100 }}
-                    className="text-center mb-14 space-y-3"
-                >
-                    <p className="text-brand-primary font-bold tracking-widest uppercase text-sm">— Skills</p>
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                        {t.about.skills_title}
+            <SectionWrapper id="skills">
+                <div className="mb-20 space-y-6 text-center">
+                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">
+                        Capabilities
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                        Technical <br />
+                        <span className="shimmer-text">Proficiencies</span>
                     </h2>
-                    <p className="text-white/40 text-sm">Hover each card to reveal proficiency</p>
-                </motion.div>
+                </div>
                 <SkillsSection />
-            </section>
-
-            {/* ── Divider ── */}
-            <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-28" />
+            </SectionWrapper>
 
             {/* ── Section 3: Contact ── */}
-            <section className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ type: 'spring', stiffness: 100 }}
-                    className="text-center mb-14 space-y-3"
-                >
-                    <p className="text-brand-primary font-bold tracking-widest uppercase text-sm">— Contact</p>
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t.about.contact_title}</h2>
-                </motion.div>
-                <div className="max-w-5xl mx-auto">
-                    <ContactSection profile={profile} />
+            <SectionWrapper id="contact">
+                <div className="grid lg:grid-cols-2 gap-20 items-start max-w-7xl mx-auto">
+                    <div className="space-y-10">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-accent/20 bg-brand-accent/5 text-brand-accent text-xs font-black uppercase tracking-[0.2em]">
+                                Contact
+                            </div>
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                                Let's Build <br />
+                                <span className="shimmer-text">Together</span>
+                            </h2>
+                            <p className="text-white/40 text-lg leading-relaxed font-medium max-w-md">
+                                {t.about.contact_subtitle}
+                            </p>
+                        </div>
+
+                        {/* Contact details could go here */}
+                    </div>
+
+                    <div className="w-full">
+                        <ContactSection profile={profile} />
+                    </div>
                 </div>
-            </section>
+            </SectionWrapper>
         </div>
     );
 }

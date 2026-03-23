@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/context/I18nContext";
+import PageTransition from "@/components/client/PageTransition";
+import Navbar from "@/components/client/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Portfolio | Senior Fullstack Developer",
-  description: "Senior Fullstack Developer Portfolio - High-end digital experiences.",
+  title: "Pio-Via | Full-Stack Portfolio",
+  description: "Modern portfolio of a Senior Full-Stack Engineer - High-end digital experiences.",
 };
 
 export default function RootLayout({
@@ -16,10 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+    <html lang="fr" suppressHydrationWarning className="dark scroll-smooth">
+      <body className={`${inter.className} bg-[#050505] text-[#ededed] antialiased`}>
         <I18nProvider>
-          {children}
+          <Navbar />
+          <PageTransition>
+            <main>
+              {children}
+            </main>
+          </PageTransition>
         </I18nProvider>
       </body>
     </html>
