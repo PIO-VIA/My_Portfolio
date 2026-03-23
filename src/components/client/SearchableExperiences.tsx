@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useRef } from 'react';
 import { useI18n } from '@/context/I18nContext';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
 import { Experience } from '@/types';
 import { Briefcase, Search, X, Calendar, GraduationCap, Star, ArrowLeft, Trophy } from 'lucide-react';
 import Link from 'next/link';
@@ -14,9 +15,30 @@ const TYPE_STYLES: Record<string, { label: string; color: string; bg: string; ic
     event: { label: 'Milestone', color: 'text-brand-accent', bg: 'bg-brand-accent/10', icon: Trophy },
 };
 
+const TECH_ICONS: Record<string, string> = {
+    'react': 'https://cdn.worldvectorlogo.com/logos/react-2.svg',
+    'nextjs': 'https://cdn.worldvectorlogo.com/logos/next-js.svg',
+    'node': 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg',
+    'typescript': 'https://cdn.worldvectorlogo.com/logos/typescript.svg',
+    'firebase': 'https://cdn.worldvectorlogo.com/logos/firebase-1.svg',
+    'docker': 'https://cdn.worldvectorlogo.com/logos/docker-4.svg',
+    'aws': 'https://cdn.worldvectorlogo.com/logos/aws-2.svg',
+    'python': 'https://cdn.worldvectorlogo.com/logos/python-5.svg',
+    'javascript': 'https://cdn.worldvectorlogo.com/logos/logo-javascript.svg',
+    'tailwind': 'https://cdn.worldvectorlogo.com/logos/tailwindcss.svg',
+};
+
 function ExperienceCard({ exp, index, language }: { exp: Experience; index: number; language: string }) {
     const ref = useRef<HTMLDivElement>(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start end", "center center"]
+    });
+
+    const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+    const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
+    const y = useTransform(scrollYProgress, [0, 0.5], [50, 0]);
+
     const typeStyle = TYPE_STYLES[exp.type] || TYPE_STYLES.job;
     const Icon = typeStyle.icon;
 
@@ -27,56 +49,67 @@ function ExperienceCard({ exp, index, language }: { exp: Experience; index: numb
     return (
         <motion.div
             ref={ref}
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
-            className="relative pl-12 pb-20 last:pb-0"
+            style={{ opacity, scale, y }}
+            className="relative pl-12 pb-24 last:pb-0"
         >
-            {/* Timeline Line Segment */}
-            <div className="absolute left-[7px] top-[24px] bottom-0 w-[2px] bg-white/5 last:hidden" />
+            {/* ... rest of the card ... */}
+            <div className="absolute left-[7px] top-[24px] bottom-0 w-[2px] bg-gradient-to-b from-brand-primary/20 via-brand-primary/5 to-transparent last:hidden" />
 
             {/* Timeline Dot */}
-            <div className={`absolute left-0 top-[6px] w-4 h-4 rounded-full border-2 ${typeStyle.color} bg-[#050505] z-10`}>
-                {isInView && (
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1.5, opacity: 0 }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className={`absolute inset-0 rounded-full ${typeStyle.bg}`}
-                    />
-                )}
+            <div className={`absolute left-0 top-[6px] w-4 h-4 rounded-full border-2 ${typeStyle.color} bg-[#050505] z-10 shadow-[0_0_15px_rgba(14,165,233,0.3)]`}>
+                <motion.div
+                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className={`absolute inset-0 rounded-full ${typeStyle.bg}`}
+                />
             </div>
 
-            <div className="glass rounded-[2.5rem] border border-white/5 p-8 sm:p-10 space-y-6 hover:border-brand-primary/20 transition-all duration-500 bg-white/2 hover:shadow-2xl group">
-                <div className="flex flex-wrap items-start justify-between gap-6">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${typeStyle.bg} ${typeStyle.color}`}>
-                                <Icon size={16} />
+            <div className="glass rounded-[3rem] border border-white/5 p-8 sm:p-12 space-y-8 hover:border-brand-primary/20 transition-all duration-700 bg-white/[0.01] hover:bg-white/[0.03] hover:shadow-[0_40px_100px_rgba(0,0,0,0.5)] group overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] -z-10 group-hover:bg-brand-primary/10 transition-colors" />
+
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-8">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-2xl ${typeStyle.bg} ${typeStyle.color} shadow-inner`}>
+                                <Icon size={20} />
                             </div>
-                            <span className={`${typeStyle.color} text-[10px] font-black uppercase tracking-[0.2em]`}>
+                            <span className={`${typeStyle.color} text-xs font-black uppercase tracking-[0.3em]`}>
                                 {exp.company}
                             </span>
                         </div>
-                        <h3 className="text-3xl font-black text-white group-hover:text-brand-primary transition-colors leading-tight">{title}</h3>
+                        <h3 className="text-4xl md:text-5xl font-black text-white group-hover:text-brand-primary transition-colors leading-tight tracking-tight">{title}</h3>
                     </div>
-                    <div className="px-5 py-2.5 glass rounded-2xl text-white/40 text-xs font-black border border-white/5 flex items-center gap-3 uppercase tracking-widest">
-                        <Calendar size={14} />
+                    <div className="px-6 py-3 glass rounded-2xl text-white/60 text-[10px] font-black border border-white/10 flex items-center gap-4 uppercase tracking-[0.2em] shadow-xl">
+                        <Calendar size={14} className="text-brand-primary" />
                         {exp.start_date} — {exp.end_date || presentLabel}
                     </div>
                 </div>
 
-                <p className="text-white/40 text-lg leading-relaxed font-medium">
+                <p className="text-white/50 text-xl leading-relaxed font-medium max-w-4xl">
                     {description}
                 </p>
 
                 {exp.tech_stack && (
-                    <div className="flex flex-wrap gap-3 pt-2">
-                        {exp.tech_stack.map(tech => (
-                            <span key={tech} className="px-4 py-2 bg-white/5 rounded-xl text-[10px] font-black text-white/30 uppercase tracking-[0.2em] border border-white/5 group-hover:border-white/10 transition-colors">
-                                {tech}
-                            </span>
-                        ))}
+                    <div className="flex flex-wrap gap-4 pt-6">
+                        {exp.tech_stack.map(tech => {
+                            const iconUrl = TECH_ICONS[tech.toLowerCase().replace(/[^a-z]/g, '')];
+                            return (
+                                <motion.div
+                                    key={tech}
+                                    whileHover={{ y: -5, scale: 1.05 }}
+                                    className="flex items-center gap-3 px-5 py-3 bg-white/5 rounded-2xl text-[10px] font-black text-white/50 uppercase tracking-[0.2em] border border-white/5 group-hover:border-white/10 transition-all shadow-lg"
+                                >
+                                    {iconUrl ? (
+                                        <div className="w-5 h-5 relative flex items-center justify-center grayscale group-hover:grayscale-0 transition-all">
+                                            <Image src={iconUrl} alt={tech} fill className="object-contain" />
+                                        </div>
+                                    ) : (
+                                        <div className="w-5 h-5 rounded-md bg-white/10" />
+                                    )}
+                                    {tech}
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 )}
             </div>

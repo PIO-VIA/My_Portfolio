@@ -1,57 +1,81 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-    Code2, Database, Globe, Layers, Cpu, Cloud, Server, GitBranch,
-    Container, BarChart, Flame, Boxes
-} from 'lucide-react';
+import Image from 'next/image';
+
+const skillLogos: Record<string, string> = {
+    'Next.js': 'https://cdn.worldvectorlogo.com/logos/next-js.svg',
+    'TypeScript': 'https://cdn.worldvectorlogo.com/logos/typescript.svg',
+    'React': 'https://cdn.worldvectorlogo.com/logos/react-2.svg',
+    'Tailwind CSS': 'https://cdn.worldvectorlogo.com/logos/tailwindcss.svg',
+    'Node.js': 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg',
+    'Firebase': 'https://cdn.worldvectorlogo.com/logos/firebase-1.svg',
+    'PostgreSQL': 'https://cdn.worldvectorlogo.com/logos/postgresql.svg',
+    'Docker': 'https://cdn.worldvectorlogo.com/logos/docker-4.svg',
+    'GraphQL': 'https://cdn.worldvectorlogo.com/logos/graphql-1.svg',
+    'Git': 'https://cdn.worldvectorlogo.com/logos/git-icon.svg',
+    'AWS': 'https://cdn.worldvectorlogo.com/logos/aws-2.svg',
+    'Python': 'https://cdn.worldvectorlogo.com/logos/python-5.svg',
+};
 
 const skills = [
-    { name: 'Next.js', icon: Globe, color: 'text-white', proficiency: 95, category: 'Frontend' },
-    { name: 'TypeScript', icon: Code2, color: 'text-blue-400', proficiency: 92, category: 'Language' },
-    { name: 'React', icon: Cpu, color: 'text-cyan-400', proficiency: 94, category: 'Frontend' },
-    { name: 'Tailwind CSS', icon: Layers, color: 'text-sky-400', proficiency: 90, category: 'Frontend' },
-    { name: 'Node.js', icon: Server, color: 'text-green-400', proficiency: 88, category: 'Backend' },
-    { name: 'Firebase', icon: Flame, color: 'text-orange-400', proficiency: 85, category: 'Database' },
-    { name: 'PostgreSQL', icon: Database, color: 'text-indigo-400', proficiency: 82, category: 'Database' },
-    { name: 'Docker', icon: Container, color: 'text-blue-300', proficiency: 78, category: 'DevOps' },
-    { name: 'GraphQL', icon: BarChart, color: 'text-pink-400', proficiency: 80, category: 'API' },
-    { name: 'Git / CI-CD', icon: GitBranch, color: 'text-rose-300', proficiency: 93, category: 'DevOps' },
-    { name: 'Cloudinary', icon: Cloud, color: 'text-brand-primary', proficiency: 88, category: 'Cloud' },
-    { name: 'Three.js', icon: Boxes, color: 'text-purple-400', proficiency: 70, category: 'Frontend' },
+    { name: 'Next.js', category: 'Frontend', proficiency: 95 },
+    { name: 'TypeScript', category: 'Language', proficiency: 92 },
+    { name: 'React', category: 'Frontend', proficiency: 94 },
+    { name: 'Tailwind CSS', category: 'Frontend', proficiency: 90 },
+    { name: 'Node.js', category: 'Backend', proficiency: 88 },
+    { name: 'Firebase', category: 'Database', proficiency: 85 },
+    { name: 'PostgreSQL', category: 'Database', proficiency: 82 },
+    { name: 'Docker', category: 'DevOps', proficiency: 78 },
+    { name: 'GraphQL', category: 'API', proficiency: 80 },
+    { name: 'Git', category: 'DevOps', proficiency: 93 },
+    { name: 'AWS', category: 'Cloud', proficiency: 75 },
+    { name: 'Python', category: 'Language', proficiency: 85 },
 ];
 
-function SkillFlipCard({ skill, index }: { skill: typeof skills[0]; index: number }) {
-    const Icon = skill.icon;
+function SkillCard({ skill, index }: { skill: typeof skills[0]; index: number }) {
+    const logoUrl = skillLogos[skill.name];
+
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ type: 'spring', stiffness: 120, damping: 18, delay: index * 0.06 }}
-            className="flip-card h-36 cursor-default"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.05 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            className="group relative"
         >
-            <div className="flip-card-inner w-full h-full">
-                {/* Front */}
-                <div className="flip-card-front glass rounded-2xl border border-white/8 hover:border-white/20 transition-colors flex flex-col items-center justify-center gap-3 p-4">
-                    <Icon size={30} className={skill.color} />
-                    <span className="font-bold text-sm text-center leading-tight">{skill.name}</span>
-                    <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">{skill.category}</span>
+            <div className="glass rounded-3xl border border-white/5 p-6 flex flex-col items-center gap-4 transition-all duration-500 hover:border-brand-primary/30 hover:shadow-[0_20px_40px_rgba(14,165,233,0.15)] bg-white/2 overflow-hidden">
+                {/* Background Glow */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 blur-[50px] -z-10 group-hover:bg-brand-primary/10 transition-colors" />
+
+                <div className="w-16 h-16 relative flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:rotate-6">
+                    {logoUrl ? (
+                        <Image src={logoUrl} alt={skill.name} fill className="object-contain p-2" />
+                    ) : (
+                        <div className="w-full h-full bg-white/5 rounded-xl" />
+                    )}
                 </div>
-                {/* Back */}
-                <div className="flip-card-back glass rounded-2xl border border-brand-primary/30 bg-brand-primary/5 flex flex-col items-center justify-center gap-3 p-4">
-                    <span className="text-3xl font-bold text-brand-primary">{skill.proficiency}%</span>
-                    <div className="w-full px-2">
-                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <motion.div
-                                className="h-full rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${skill.proficiency}%` }}
-                                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                            />
-                        </div>
+
+                <div className="text-center space-y-1">
+                    <h4 className="text-sm font-black text-white group-hover:text-brand-primary transition-colors">{skill.name}</h4>
+                    <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em]">{skill.category}</p>
+                </div>
+
+                {/* Proficiency Bar */}
+                <div className="w-full mt-2 space-y-2">
+                    <div className="flex justify-between text-[8px] font-black tracking-widest text-white/10 group-hover:text-white/30 transition-colors">
+                        <span>PROFICIENCY</span>
+                        <span>{skill.proficiency}%</span>
                     </div>
-                    <span className="text-xs text-white/40 font-medium">{skill.name}</span>
+                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${skill.proficiency}%` }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            className="h-full bg-gradient-to-r from-brand-primary to-brand-secondary"
+                        />
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -60,9 +84,9 @@ function SkillFlipCard({ skill, index }: { skill: typeof skills[0]; index: numbe
 
 export default function SkillsSection() {
     return (
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {skills.map((skill, i) => (
-                <SkillFlipCard key={skill.name} skill={skill} index={i} />
+                <SkillCard key={skill.name} skill={skill} index={i} />
             ))}
         </div>
     );
