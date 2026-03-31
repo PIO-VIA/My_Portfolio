@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useI18n } from '@/context/I18nContext';
 
 const skillLogos: Record<string, string> = {
     'Next.js': 'https://cdn.worldvectorlogo.com/logos/next-js.svg',
@@ -33,7 +35,7 @@ const skills = [
     { name: 'Python', category: 'Language', proficiency: 85 },
 ];
 
-function SkillCard({ skill, index }: { skill: typeof skills[0]; index: number }) {
+function SkillCard({ skill, index, t }: { skill: any; index: number; t: any }) {
     const logoUrl = skillLogos[skill.name];
 
     return (
@@ -65,7 +67,7 @@ function SkillCard({ skill, index }: { skill: typeof skills[0]; index: number })
                 {/* Proficiency Bar */}
                 <div className="w-full mt-2 space-y-2">
                     <div className="flex justify-between text-[8px] font-black tracking-widest text-white/10 group-hover:text-white/30 transition-colors">
-                        <span>PROFICIENCY</span>
+                        <span>{t.skills.proficiency}</span>
                         <span>{skill.proficiency}%</span>
                     </div>
                     <div className="h-1 bg-white/5 rounded-full overflow-hidden">
@@ -83,10 +85,27 @@ function SkillCard({ skill, index }: { skill: typeof skills[0]; index: number })
 }
 
 export default function SkillsSection() {
+    const { t } = useI18n();
+
+    const localizedSkills = [
+        { name: 'Next.js', category: t.skills.cat_frontend, proficiency: 95 },
+        { name: 'TypeScript', category: t.skills.cat_language, proficiency: 92 },
+        { name: 'React', category: t.skills.cat_frontend, proficiency: 94 },
+        { name: 'Tailwind CSS', category: t.skills.cat_frontend, proficiency: 90 },
+        { name: 'Node.js', category: t.skills.cat_backend, proficiency: 88 },
+        { name: 'Firebase', category: t.skills.cat_database, proficiency: 85 },
+        { name: 'PostgreSQL', category: t.skills.cat_database, proficiency: 82 },
+        { name: 'Docker', category: t.skills.cat_devops, proficiency: 78 },
+        { name: 'GraphQL', category: t.skills.cat_api, proficiency: 80 },
+        { name: 'Git', category: t.skills.cat_devops, proficiency: 93 },
+        { name: 'AWS', category: t.skills.cat_cloud, proficiency: 75 },
+        { name: 'Python', category: t.skills.cat_language, proficiency: 85 },
+    ];
+
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {skills.map((skill, i) => (
-                <SkillCard key={skill.name} skill={skill} index={i} />
+            {localizedSkills.map((skill, i) => (
+                <SkillCard key={skill.name} skill={skill} index={i} t={t} />
             ))}
         </div>
     );

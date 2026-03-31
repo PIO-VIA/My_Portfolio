@@ -72,7 +72,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-6">
                     <LanguageSwitcher />
                     <Link href="/about#contact" className="px-6 py-2.5 bg-white text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-brand-primary hover:text-white transition-all duration-500 hover:scale-105 active:scale-95 shadow-xl shadow-brand-primary/5">
-                        Hire Me
+                        {t.nav.hire_me}
                     </Link>
                 </div>
 
@@ -129,7 +129,7 @@ export default function Navbar() {
                                     onClick={() => setIsOpen(false)}
                                     className="flex items-center justify-center w-full px-6 py-5 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em]"
                                 >
-                                    Hire Me
+                                    {t.nav.hire_me}
                                 </Link>
                             </div>
                         </div>

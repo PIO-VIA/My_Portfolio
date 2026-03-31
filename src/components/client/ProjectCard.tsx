@@ -5,14 +5,15 @@ import { motion } from 'framer-motion';
 import { Github, ExternalLink, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useI18n } from '@/context/I18nContext';
 
 interface ProjectCardProps {
     project: Project;
-    language: string;
     index: number;
 }
 
-export default function ProjectCard({ project, language, index }: ProjectCardProps) {
+export default function ProjectCard({ project, index }: ProjectCardProps) {
+    const { t, language } = useI18n();
     const title = language === 'fr' ? project.title_fr : project.title_en;
     const description = language === 'fr' ? project.description_fr : project.description_en;
 
@@ -81,7 +82,7 @@ export default function ProjectCard({ project, language, index }: ProjectCardPro
                         )}
                     </div>
                     <Link href={`/projects/${project.id}`} className="text-xs font-bold uppercase tracking-[0.2em] text-white/20 hover:text-brand-primary group-hover:text-brand-primary/60 transition-colors">
-                        Explore Details
+                        {t.projects.explore_details}
                     </Link>
                 </div>
             </div>

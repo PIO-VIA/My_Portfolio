@@ -20,7 +20,7 @@ const socialVariants = {
 export default function Hero({ profile }: { profile: Profile }) {
     const { t } = useI18n();
 
-    const roles = ["Cloud Engineer", "DevOps Engineer", "Software Engineer"];
+    const roles = t.hero.roles;
 
     const socialLinks = [
         { icon: Github, href: profile.social_links?.github, label: 'GitHub' },
@@ -56,11 +56,11 @@ export default function Hero({ profile }: { profile: Profile }) {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass border border-white/10 text-brand-primary font-medium tracking-wide shadow-2xl"
+                        className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass border border-white/10 text-brand-primary font-black tracking-widest text-[10px] uppercase shadow-2xl"
                     >
-                        <span className="relative flex h-2.5 w-2.5">
+                        <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary" />
                         </span>
                         {t.hero.available}
                     </motion.div>
@@ -70,20 +70,29 @@ export default function Hero({ profile }: { profile: Profile }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight text-white"
+                            className="text-5xl md:text-7xl lg:text-[100px] font-black leading-[0.95] tracking-tighter text-white"
                         >
                             High-End <br />
-                            <AnimatedText
-                                words={roles}
-                                className="shimmer-text"
-                            />
+                            <div className="relative inline-block mt-2">
+                                <AnimatedText
+                                    words={roles}
+                                    className="shimmer-text"
+                                />
+                                {/* Underline accent */}
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: '100%' }}
+                                    transition={{ duration: 1, delay: 1 }}
+                                    className="absolute -bottom-2 left-0 h-1.5 bg-brand-primary/30 rounded-full blur-[2px]"
+                                />
+                            </div>
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.4 }}
-                            className="text-lg md:text-xl text-white/80 max-w-xl leading-relaxed font-medium"
+                            className="text-lg md:text-xl text-white/60 max-w-xl leading-relaxed font-medium"
                         >
                             {t.hero.subtitle}
                         </motion.p>
@@ -93,21 +102,21 @@ export default function Hero({ profile }: { profile: Profile }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.6 }}
-                        className="flex flex-wrap items-center gap-8 w-full"
+                        className="flex flex-wrap items-center gap-6 w-full"
                     >
                         <Link
                             href="/projects"
-                            className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-white overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(14,165,233,0.3)] bg-gradient-to-br from-brand-primary to-brand-secondary"
+                            className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-white overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(14,165,233,0.3)] bg-gradient-to-br from-brand-primary to-brand-secondary uppercase tracking-widest text-xs"
                         >
                             <span className="relative z-10">{t.hero.cta}</span>
                             <ArrowRight
-                                size={20}
+                                size={16}
                                 className="relative z-10 transition-transform group-hover:translate-x-1.5"
                             />
                             <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </Link>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                             {socialLinks.map(({ icon: Icon, href, label }, i) => (
                                 <motion.a
                                     key={label}
@@ -119,11 +128,11 @@ export default function Hero({ profile }: { profile: Profile }) {
                                     variants={socialVariants}
                                     initial="hidden"
                                     animate="visible"
-                                    whileHover={{ scale: 1.2, y: -4, color: 'var(--brand-primary)' }}
+                                    whileHover={{ scale: 1.1, y: -4, color: 'var(--brand-primary)', backgroundColor: 'rgba(255,255,255,0.05)' }}
                                     whileTap={{ scale: 0.9 }}
                                     className="p-4 glass rounded-2xl text-white/40 border border-white/5 transition-all duration-300 hover:border-brand-primary/30"
                                 >
-                                    <Icon size={24} />
+                                    <Icon size={20} />
                                 </motion.a>
                             ))}
                         </div>
@@ -132,38 +141,48 @@ export default function Hero({ profile }: { profile: Profile }) {
 
                 {/* Right — Profile Image */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                     className="relative flex items-center justify-center lg:justify-end"
                 >
-                    <div className="relative w-72 h-72 md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px]">
-                        {/* Interactive Glow */}
-                        <div className="absolute inset-0 bg-brand-primary/20 blur-[120px] rounded-full animate-pulse" />
+                    <div className="relative w-72 h-72 md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px]">
+                        {/* Interactive Glows */}
+                        <div className="absolute -inset-10 bg-brand-primary/10 blur-[120px] rounded-full animate-pulse" />
+                        <div className="absolute -inset-20 bg-brand-secondary/5 blur-[150px] rounded-full animate-float -z-10" />
 
-                        {/* Main Image Frame */}
-                        <div className="relative w-full h-full overflow-hidden rounded-[2.5rem] md:rounded-[4rem] border border-white/10 bg-[#0a0a0a] shadow-2xl group transition-transform duration-500 hover:scale-[1.02]">
+                        {/* Main Image Frame (The "X" placeholder in screenshot is actually the frame logic) */}
+                        <div className="relative w-full h-full overflow-hidden rounded-[3rem] md:rounded-[5rem] border border-white/10 bg-[#0a0a0a] shadow-[0_0_100px_rgba(0,0,0,0.8)] group transition-transform duration-700 hover:scale-[1.01]">
                             <Image
                                 src={profile.profile_image_url || '/next.svg'}
                                 alt={profile.name}
                                 fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
+                                className="object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
                                 priority
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                         </div>
 
                         {/* Floating Tech Badges or Particles */}
-                        <div className="absolute -top-10 -right-10 w-24 h-24 glass rounded-3xl flex items-center justify-center border border-white/10 rotate-12 animate-bounce-slow">
+                        <motion.div
+                            animate={{ rotate: [12, 15, 12], y: [0, -10, 0] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -top-10 -right-10 w-24 h-24 glass rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl"
+                        >
                             <div className="w-12 h-12 bg-brand-primary/20 rounded-xl blur-lg absolute" />
-                            <span className="text-3xl">🚀</span>
-                        </div>
-                        <div className="absolute -bottom-6 -left-6 px-6 py-3 glass rounded-2xl border border-white/10 -rotate-6">
-                            <span className="text-sm font-bold text-white/70 uppercase tracking-widest leading-none flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-green-500" />
-                                Senior Expert
+                            <span className="text-3xl filter drop-shadow-2xl">🚀</span>
+                        </motion.div>
+
+                        <motion.div
+                            animate={{ rotate: [-6, -4, -6], y: [0, 5, 0] }}
+                            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                            className="absolute -bottom-6 -left-6 px-6 py-4 glass rounded-[2rem] border border-white/10 shadow-2xl"
+                        >
+                            <span className="text-[10px] font-black text-white/70 uppercase tracking-[0.3em] leading-none flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                {t.hero.expert}
                             </span>
-                        </div>
+                        </motion.div>
                     </div>
                 </motion.div>
             </div>
@@ -176,11 +195,11 @@ export default function Hero({ profile }: { profile: Profile }) {
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
                 aria-hidden="true"
             >
-                <span className="text-[10px] text-white/20 font-bold tracking-[0.3em] uppercase">Discovery</span>
+                <span className="text-[9px] text-white/30 font-black tracking-[0.4em] uppercase">{t.hero.discovery}</span>
                 <motion.div
-                    animate={{ y: [0, 10, 0] }}
+                    animate={{ y: [0, 8, 0], opacity: [0.2, 0.5, 0.2] }}
                     transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                    className="w-[2px] h-10 bg-gradient-to-b from-brand-primary via-brand-primary/50 to-transparent rounded-full"
+                    className="w-[1.5px] h-12 bg-gradient-to-b from-brand-primary via-brand-primary/50 to-transparent rounded-full shadow-[0_0_10px_rgba(14,165,233,0.5)]"
                 />
             </motion.div>
         </section>

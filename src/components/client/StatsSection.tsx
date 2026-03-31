@@ -75,25 +75,26 @@ export default function StatsSection() {
     return (
         <SectionWrapper id="stats" className="relative group/section">
             <div className="container mx-auto px-6">
-                <div className="text-center mb-20 space-y-6">
-                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-xs font-black uppercase tracking-[0.2em]">
-                        {t.stats.title}
+                <div className="text-center mb-24 space-y-8">
+                    <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                        {t.stats.badge}
                     </div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-                        Measured by <br />
-                        <span className="shimmer-text">Excellence</span>
+                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white leading-[0.9] uppercase">
+                        {t.stats.title} <br />
+                        <span className="shimmer-text">{t.stats.title_shimmer}</span>
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
                     {statsConfig.map((cfg, i) => (
                         <StatCard key={cfg.labelKey} config={cfg} index={i} active={isInView} />
                     ))}
                 </div>
             </div>
 
-            {/* Background line */}
-            <div className="absolute top-1/2 left-0 right-0 h-px bg-white/5 -z-20" />
+            {/* Background line accent */}
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent -z-20" />
         </SectionWrapper>
     );
 }

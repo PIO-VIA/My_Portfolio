@@ -52,7 +52,7 @@ export default function AnimatedText({
 
     return (
         <span className={`${className} inline-flex items-center min-h-[1.2em]`}>
-            <span className="relative">
+            <span className=" color-white">
                 {words[index].substring(0, subIndex)}
                 <motion.span
                     animate={{ opacity: [1, 0] }}

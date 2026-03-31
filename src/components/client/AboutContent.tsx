@@ -64,12 +64,13 @@ export default function AboutContent({ profile }: { profile: Profile }) {
                     {/* Text content */}
                     <div className="space-y-10">
                         <div className="space-y-6">
-                            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-xs font-black uppercase tracking-[0.2em]">
+                            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                                <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
                                 {t.about.title}
                             </div>
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-tight text-white">
-                                Engineering <br />
-                                <span className="shimmer-text">Human-Centric</span> Solutions
+                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-white uppercase">
+                                {t.about.identity_title} <br />
+                                <span className="shimmer-text">{t.about.identity_shimmer}</span>
                             </h1>
                             <p className="text-white/40 text-xl leading-relaxed font-medium max-w-xl">
                                 {bio}
@@ -77,22 +78,22 @@ export default function AboutContent({ profile }: { profile: Profile }) {
                         </div>
 
                         <div className="grid grid-cols-2 gap-6 pt-4">
-                            <div className="p-6 glass rounded-3xl border border-white/5 space-y-3 hover:border-brand-primary/20 transition-all duration-500">
-                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-brand-primary border border-white/5">
-                                    <MapPin size={20} />
+                            <div className="p-8 glass rounded-[2.5rem] border border-white/5 space-y-4 hover:border-brand-primary/20 transition-all duration-500 bg-white/2 shadow-xl">
+                                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-brand-primary border border-white/5 shadow-inner">
+                                    <MapPin size={24} />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Location</p>
-                                    <p className="text-sm font-black text-white">Paris, France</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">{t.about.location_label}</p>
+                                    <p className="text-sm font-black text-white">{t.contact.location_value}</p>
                                 </div>
                             </div>
-                            <div className="p-6 glass rounded-3xl border border-white/5 space-y-3 hover:border-brand-secondary/20 transition-all duration-500">
-                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-brand-secondary border border-white/5">
-                                    <Zap size={20} />
+                            <div className="p-8 glass rounded-[2.5rem] border border-white/5 space-y-4 hover:border-brand-secondary/20 transition-all duration-500 bg-white/2 shadow-xl">
+                                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-brand-secondary border border-white/5 shadow-inner">
+                                    <Zap size={24} />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Speed</p>
-                                    <p className="text-sm font-black text-white">Fast Delivery</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">{t.about.speed_label}</p>
+                                    <p className="text-sm font-black text-white">{t.about.speed_value}</p>
                                 </div>
                             </div>
                         </div>
@@ -102,13 +103,14 @@ export default function AboutContent({ profile }: { profile: Profile }) {
 
             {/* ── Section 2: Skills ── */}
             <SectionWrapper id="skills">
-                <div className="mb-20 space-y-6 text-center">
-                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">
-                        Capabilities
+                <div className="mb-24 space-y-8 text-center">
+                    <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/5 bg-white/5 text-white/40 text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/20 animate-pulse" />
+                        {t.about.capabilities_badge}
                     </div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-                        Technical <br />
-                        <span className="shimmer-text">Proficiencies</span>
+                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white leading-[0.9] uppercase">
+                        {t.about.capabilities_title} <br />
+                        <span className="shimmer-text">{t.about.capabilities_shimmer}</span>
                     </h2>
                 </div>
                 <SkillsSection />
@@ -118,15 +120,16 @@ export default function AboutContent({ profile }: { profile: Profile }) {
             <SectionWrapper id="contact">
                 <div className="grid lg:grid-cols-2 gap-20 items-start max-w-7xl mx-auto">
                     <div className="space-y-10">
-                        <div className="space-y-6">
-                            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-accent/20 bg-brand-accent/5 text-brand-accent text-xs font-black uppercase tracking-[0.2em]">
-                                Contact
+                        <div className="space-y-8">
+                            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-brand-accent/20 bg-brand-accent/5 text-brand-accent text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                                {t.about.contact_badge}
                             </div>
-                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-                                Let's Build <br />
-                                <span className="shimmer-text">Together</span>
+                            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white leading-[0.9] uppercase">
+                                {t.about.contact_title} <br />
+                                <span className="shimmer-text">{t.about.contact_shimmer}</span>
                             </h2>
-                            <p className="text-white/40 text-lg leading-relaxed font-medium max-w-md">
+                            <p className="text-white/40 text-xl leading-relaxed font-medium max-w-md">
                                 {t.about.contact_subtitle}
                             </p>
                         </div>

@@ -15,15 +15,16 @@ export default function ProjectsSection({ projects }: { projects: Project[] }) {
         <SectionWrapper id="projects" className="bg-[#05a05] relative">
             <div className="container mx-auto px-6">
                 {/* Section header */}
-                <div className="mb-20 space-y-6 text-center lg:text-left">
-                    <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-xs font-black uppercase tracking-[0.2em]">
-                        {t.nav.projects}
+                <div className="mb-24 space-y-8 text-center lg:text-left">
+                    <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-brand-primary text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                        {t.projects.badge}
                     </div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-                        Crafting Digital <br />
-                        <span className="shimmer-text">Masterpieces</span>
-                    </h2>
-                    <p className="text-white/40 max-w-2xl text-lg leading-relaxed mx-auto lg:mx-0 font-medium">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white leading-[0.9] uppercase">
+                        {t.projects.title} <br />
+                        <span className="shimmer-text">{t.projects.title_shimmer}</span>
+                    </h1>
+                    <p className="text-white/40 max-w-2xl text-xl leading-relaxed mx-auto lg:mx-0 font-medium">
                         {t.projects.subtitle}
                     </p>
                 </div>
@@ -32,7 +33,7 @@ export default function ProjectsSection({ projects }: { projects: Project[] }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                     {projects.slice(0, 3).map((project, i) => (
                         <div key={project.id} className={i === 0 ? 'lg:col-span-2' : ''}>
-                            <ProjectCard project={project} language={language} index={i} />
+                            <ProjectCard project={project} index={i} />
                         </div>
                     ))}
                 </div>

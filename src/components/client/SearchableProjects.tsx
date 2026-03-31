@@ -81,7 +81,7 @@ export default function SearchableProjects({ projects }: { projects: Project[] }
                         <div className="flex flex-wrap gap-3 items-center">
                             <div className="text-[10px] font-black uppercase tracking-widest text-white/20 mr-2 flex items-center gap-2">
                                 <Filter size={14} />
-                                Filter By
+                                {t.ui.filter_by}
                             </div>
                             <button
                                 onClick={() => setActiveFilter(null)}
@@ -90,7 +90,7 @@ export default function SearchableProjects({ projects }: { projects: Project[] }
                                     : 'glass border-white/5 text-white/40 hover:text-white hover:border-white/20 bg-white/2'
                                     }`}
                             >
-                                All
+                                {t.ui.filter_all}
                             </button>
                             {allTechs.map(tech => (
                                 <button
@@ -120,7 +120,7 @@ export default function SearchableProjects({ projects }: { projects: Project[] }
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.6, delay: i * 0.05, ease: [0.21, 0.47, 0.32, 0.98] }}
                             >
-                                <ProjectCard project={project} />
+                                <ProjectCard project={project} index={i} />
                             </motion.div>
                         ))}
                     </AnimatePresence>
@@ -137,10 +137,10 @@ export default function SearchableProjects({ projects }: { projects: Project[] }
                             <Search size={40} className="text-white/20" />
                         </div>
                         <h3 className="text-2xl font-black text-white mb-2">{t.ui.no_results}</h3>
-                        <p className="text-white/40 text-lg mb-8">Try adjusting your search or filters</p>
+                        <p className="text-white/40 text-lg mb-8">{t.ui.no_results_subtitle_projects}</p>
                         <button onClick={() => { setSearchQuery(''); setActiveFilter(null); }}
                             className="px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-brand-primary hover:text-white transition-colors">
-                            Reset all filters
+                            {t.ui.reset_filters}
                         </button>
                     </motion.div>
                 )}

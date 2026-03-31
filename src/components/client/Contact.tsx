@@ -33,7 +33,7 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                     <div className="space-y-3">
                         <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
                             <User size={12} />
-                            Full Name
+                            {t.contact.full_name}
                         </label>
                         <input
                             type="text"
@@ -46,7 +46,7 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                     <div className="space-y-3">
                         <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
                             <Mail size={12} />
-                            Email Address
+                            {t.contact.email_address}
                         </label>
                         <input
                             type="email"
@@ -61,11 +61,11 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                 <div className="space-y-3">
                     <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
                         <Type size={12} />
-                        Subject
+                        {t.contact.subject}
                     </label>
                     <input
                         type="text"
-                        placeholder="Inquiry about new project"
+                        placeholder="..."
                         required
                         disabled={status !== 'idle'}
                         className="w-full px-6 py-4 glass rounded-2xl border border-white/5 focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all text-white placeholder-white/10 font-medium disabled:opacity-50 bg-white/5"
@@ -75,10 +75,10 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                 <div className="space-y-3">
                     <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 ml-2">
                         <MessageSquare size={12} />
-                        Message
+                        {t.contact.message}
                     </label>
                     <textarea
-                        placeholder="Tell me more about your project..."
+                        placeholder="..."
                         required
                         rows={6}
                         disabled={status !== 'idle'}
@@ -100,21 +100,21 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                         {status === 'idle' && (
                             <motion.span key="idle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="flex items-center gap-3">
-                                Send Message <Send size={16} />
+                                {t.contact.send_message} <Send size={16} />
                             </motion.span>
                         )}
                         {status === 'sending' && (
                             <motion.span key="sending" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="flex items-center gap-3">
                                 <Loader2 size={18} className="animate-spin" />
-                                Transmitting...
+                                {t.contact.transmitting}
                             </motion.span>
                         )}
                         {status === 'sent' && (
                             <motion.span key="sent" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
                                 className="flex items-center gap-3 text-white">
                                 <Check size={20} />
-                                Successfully Sent
+                                {t.contact.successfully_sent}
                             </motion.span>
                         )}
                     </AnimatePresence>
@@ -127,7 +127,7 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                         <Mail size={20} />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Email</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">{t.contact.email}</p>
                         <p className="text-sm font-black text-white">{profile.social_links?.email}</p>
                     </div>
                 </a>
@@ -136,8 +136,8 @@ export default function ContactSection({ profile }: { profile: Profile }) {
                         <MapPin size={20} />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">Based In</p>
-                        <p className="text-sm font-black text-white">Paris, France</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20">{t.contact.based_in}</p>
+                        <p className="text-sm font-black text-white">{t.contact.location_value}</p>
                     </div>
                 </div>
             </div>

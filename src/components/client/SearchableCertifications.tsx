@@ -9,7 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SectionWrapper from './SectionWrapper';
 
-function CertCard({ cert, index, language }: { cert: Certification; index: number; language: string }) {
+function CertCard({ cert, index, language, t }: { cert: Certification; index: number; language: string; t: any }) {
     const title = language === 'fr' ? cert.title_fr : cert.title_en;
     const ref = useRef<HTMLDivElement>(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -47,7 +47,7 @@ function CertCard({ cert, index, language }: { cert: Certification; index: numbe
                     </div>
                     <div className="flex items-center gap-2 px-4 py-2 glass rounded-xl border border-white/5">
                         <GraduationCap size={14} />
-                        Certification
+                        {t.nav.certifications}
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@ export default function SearchableCertifications({ certifications }: { certifica
                 <div className="grid grid-cols-1 gap-6">
                     <AnimatePresence mode="popLayout">
                         {filtered.map((cert, i) => (
-                            <CertCard key={cert.id} cert={cert} index={i} language={language} />
+                            <CertCard key={cert.id} cert={cert} index={i} language={language} t={t} />
                         ))}
                     </AnimatePresence>
                 </div>
@@ -138,10 +138,10 @@ export default function SearchableCertifications({ certifications }: { certifica
                             <Award size={40} className="text-white/20" />
                         </div>
                         <h3 className="text-2xl font-black text-white mb-2">{t.ui.no_results}</h3>
-                        <p className="text-white/40 text-lg mb-8">No certifications match your criteria</p>
+                        <p className="text-white/40 text-lg mb-8">{t.ui.no_results_subtitle_projects}</p>
                         <button onClick={() => setSearchQuery('')}
                             className="px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-brand-primary hover:text-white transition-colors">
-                            Clear search
+                            {t.ui.clear_search}
                         </button>
                     </motion.div>
                 )}

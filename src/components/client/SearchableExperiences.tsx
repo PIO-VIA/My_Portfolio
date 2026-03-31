@@ -9,11 +9,7 @@ import { Briefcase, Search, X, Calendar, GraduationCap, Star, ArrowLeft, Trophy 
 import Link from 'next/link';
 import SectionWrapper from './SectionWrapper';
 
-const TYPE_STYLES: Record<string, { label: string; color: string; bg: string; icon: any }> = {
-    job: { label: 'Professional', color: 'text-brand-primary', bg: 'bg-brand-primary/10', icon: Briefcase },
-    education: { label: 'Education', color: 'text-brand-secondary', bg: 'bg-brand-secondary/10', icon: GraduationCap },
-    event: { label: 'Milestone', color: 'text-brand-accent', bg: 'bg-brand-accent/10', icon: Trophy },
-};
+// Types definitions moved inside component for i18n
 
 const TECH_ICONS: Record<string, string> = {
     'react': 'https://cdn.worldvectorlogo.com/logos/react-2.svg',
@@ -28,7 +24,7 @@ const TECH_ICONS: Record<string, string> = {
     'tailwind': 'https://cdn.worldvectorlogo.com/logos/tailwindcss.svg',
 };
 
-function ExperienceCard({ exp, index, language }: { exp: Experience; index: number; language: string }) {
+function ExperienceCard({ exp, index, language, t }: { exp: Experience; index: number; language: string; t: any }) {
     const ref = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -39,12 +35,18 @@ function ExperienceCard({ exp, index, language }: { exp: Experience; index: numb
     const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
     const y = useTransform(scrollYProgress, [0, 0.5], [50, 0]);
 
-    const typeStyle = TYPE_STYLES[exp.type] || TYPE_STYLES.job;
+    const typeStyles: Record<string, { label: string; color: string; bg: string; icon: any }> = {
+        job: { label: t.ui.type_professional, color: 'text-brand-primary', bg: 'bg-brand-primary/10', icon: Briefcase },
+        education: { label: t.ui.type_education, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10', icon: GraduationCap },
+        event: { label: t.ui.type_milestone, color: 'text-brand-accent', bg: 'bg-brand-accent/10', icon: Trophy },
+    };
+
+    const typeStyle = typeStyles[exp.type] || typeStyles.job;
     const Icon = typeStyle.icon;
 
     const title = language === 'fr' ? exp.title_fr : exp.title_en;
     const description = language === 'fr' ? exp.description_fr : exp.description_en;
-    const presentLabel = language === 'fr' ? 'Présent' : 'Present';
+    const presentLabel = t.ui.present;
 
     return (
         <motion.div
@@ -178,7 +180,7 @@ export default function SearchableExperiences({ experiences }: { experiences: Ex
                 <div className="relative">
                     <AnimatePresence mode="popLayout">
                         {filtered.map((exp, i) => (
-                            <ExperienceCard key={exp.id} exp={exp} index={i} language={language} />
+                            <ExperienceCard key={exp.id} exp={exp} index={i} language={language} t={t} />
                         ))}
                     </AnimatePresence>
                 </div>
@@ -193,10 +195,10 @@ export default function SearchableExperiences({ experiences }: { experiences: Ex
                             <Briefcase size={40} className="text-white/20" />
                         </div>
                         <h3 className="text-2xl font-black text-white mb-2">{t.ui.no_results}</h3>
-                        <p className="text-white/40 text-lg mb-8">No experiences match your criteria</p>
+                        <p className="text-white/40 text-lg mb-8">{t.ui.no_results_subtitle_experiences}</p>
                         <button onClick={() => setSearchQuery('')}
                             className="px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-brand-primary hover:text-white transition-colors">
-                            Clear search
+                            {t.ui.clear_search}
                         </button>
                     </motion.div>
                 )}
